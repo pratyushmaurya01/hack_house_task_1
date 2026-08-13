@@ -76,7 +76,7 @@ export function BuilderForm({ onGenerateSuccess }) {
     formData.append('optional_field', optionalField);
 
     try {
-      const res = await fetch('http://localhost:8000/api/generate', {
+      const res = await fetch('https://hack-house-task-1.onrender.com/api/generate', {
         method: 'POST',
         body: formData,
       });
@@ -88,8 +88,8 @@ export function BuilderForm({ onGenerateSuccess }) {
       }
       
       onGenerateSuccess({
-        imageUrl: `http://localhost:8000${data.image_url}`,
-        shareUrl: `http://localhost:8000${data.share_url}`
+        imageUrl: `https://hack-house-task-1.onrender.com${data.image_url}`,
+        shareUrl: `https://hack-house-task-1.onrender.com${data.share_url}`
       });
     } catch (err) {
       setError(err.message);
