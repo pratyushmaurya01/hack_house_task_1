@@ -88,8 +88,8 @@ export function BuilderForm({ onGenerateSuccess }) {
       }
       
       onGenerateSuccess({
-        imageUrl: `https://hack-house-task-1.onrender.com${data.image_url}`,
-        shareUrl: `https://hack-house-task-1.onrender.com${data.share_url}`
+        imageUrl: data.image_url,
+        shareUrl: data.share_url
       });
     } catch (err) {
       setError(err.message);

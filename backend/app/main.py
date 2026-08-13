@@ -4,6 +4,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import os
 import shutil
+from dotenv import load_dotenv
+load_dotenv()
+
 from .generator import generate_card
 
 app = FastAPI(title="HH Goa 2026 Builder ID API")
@@ -44,7 +47,7 @@ async def generate(
         with open(temp_path, "wb") as f:
             shutil.copyfileobj(photo.file, f)
             
-        card_id, out_filename = generate_card(temp_path, name, stack, optional_field, OUTPUT_DIR)
+        card_id, public_url = generate_card(temp_path, name, stack, optional_field, OUTPUT_DIR)
         
         # Cleanup
         os.remove(temp_path)
@@ -52,8 +55,8 @@ async def generate(
         return {
             "success": True,
             "card_id": card_id,
-            "image_url": f"/generated/{out_filename}",
-            "share_url": f"/share/{out_filename}"
+            "image_url": public_url,
+            "share_url": public_url
         }
     except Exception as e:
         if os.path.exists(temp_path):

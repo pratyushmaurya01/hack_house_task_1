@@ -1,8 +1,16 @@
 import os
 import requests
 import uuid
+import cloudinary
+import cloudinary.uploader
 from PIL import Image, ImageDraw, ImageFont, ExifTags
 import pillow_heif
+
+cloudinary.config(
+  cloud_name = os.getenv('CLOUD_NAME'),
+  api_key = os.getenv('API_KEY'),
+  api_secret = os.getenv('API_SECRET')
+)
 
 pillow_heif.register_heif_opener()
 
@@ -160,7 +168,7 @@ def generate_card(photo_path: str, name: str, stack: str, optional_text: str, ou
     stack_string = get_stack_text(stack, optional_text)
     draw.text((center_x, 1580), stack_string, font=font_stack, fill="#f5c842", anchor="mm")
     
-    # Save
+    # Save Locally Temporary
     card_id = str(uuid.uuid4())
     safe_name = "".join(c for c in name.lower().replace(" ", "-") if c.isalnum() or c == "-")
     filename = f"hhgoa26-{safe_name}-{card_id[:8]}.png"
@@ -168,4 +176,8 @@ def generate_card(photo_path: str, name: str, stack: str, optional_text: str, ou
     
     canvas.save(filepath, "PNG")
     
-    return card_id, filename
+    # Upload to Cloudinary
+    upload_result = cloudinary.uploader.upload(filepath, public_id=filename.replace(".png", ""))
+    public_url = upload_result.get("secure_url")
+    
+    return card_id, public_url
